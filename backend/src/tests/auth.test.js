@@ -382,5 +382,45 @@ it('should allow ADMIN to update sweet details', async () => {
   expect(response.body.price).toBe(15);
 });
 
+it('should allow ADMIN to delete a sweet', async () => {
+  // register admin
+  const adminRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Delete Admin',
+      email: 'deleteadmin@example.com',
+      password: 'password123'
+    });
+
+  const adminToken = adminRes.body.token;
+
+  const User = require('../models/user.model');
+  await User.findOneAndUpdate(
+    { email: 'deleteadmin@example.com' },
+    { role: 'ADMIN' }
+  );
+
+  // create sweet
+  const sweetRes = await request(app)
+    .post('/api/sweets')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      name: 'Halwa',
+      category: 'Indian',
+      price: 20,
+      quantity: 10
+    });
+
+  const sweetId = sweetRes.body._id;
+
+  // delete sweet
+  const response = await request(app)
+    .delete(`/api/sweets/${sweetId}`)
+    .set('Authorization', `Bearer ${adminToken}`);
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body.message).toBe('Sweet deleted successfully');
+});
+
 
 });

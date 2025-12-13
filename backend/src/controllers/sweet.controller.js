@@ -86,10 +86,28 @@ const updateSweet = async (req, res) => {
   }
 };
 
+const deleteSweet = async (req, res) => {
+  try {
+    const sweet = await Sweet.findById(req.params.id);
+
+    if (!sweet) {
+      return res.status(404).json({ message: 'Sweet not found' });
+    }
+
+    await sweet.deleteOne();
+
+    res.status(200).json({ message: 'Sweet deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Delete failed' });
+  }
+};
+
+
 module.exports = {
   getAllSweets,
   createSweet,
   purchaseSweet,
   restockSweet,
-  updateSweet
+  updateSweet,
+  deleteSweet
 };
