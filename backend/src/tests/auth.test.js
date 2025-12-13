@@ -113,5 +113,62 @@ describe('Auth API', () => {
   expect(response.body).toHaveProperty('user');
 });
 
+it('should return empty sweets list for authenticated user', async () => {
+  // register user
+  const registerRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Sweet User',
+      email: 'sweetuser@example.com',
+      password: 'password123'
+    });
+
+  const token = registerRes.body.token;
+
+  // get sweets
+  const response = await request(app)
+    .get('/api/sweets')
+    .set('Authorization', `Bearer ${token}`);
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body).toEqual([]);
+});
+
+it('should allow ADMIN to add a new sweet', async () => {
+  // register admin user
+  const registerRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Admin User',
+      email: 'admin@example.com',
+      password: 'password123'
+    });
+
+  const adminToken = registerRes.body.token;
+
+  // make this user ADMIN directly (test setup)
+  const User = require('../models/user.model');
+  await User.findOneAndUpdate(
+    { email: 'admin@example.com' },
+    { role: 'ADMIN' }
+  );
+
+  // add sweet
+  const response = await request(app)
+    .post('/api/sweets')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      name: 'Gulab Jamun',
+      category: 'Indian',
+      price: 10,
+      quantity: 50
+    });
+
+  expect(response.statusCode).toBe(201);
+  expect(response.body).toHaveProperty('_id');
+  expect(response.body.name).toBe('Gulab Jamun');
+});
+
+
 
 });
