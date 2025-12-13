@@ -195,6 +195,56 @@ it('should NOT allow USER to add a new sweet', async () => {
   expect(response.statusCode).toBe(403);
 });
 
+it('should allow user to purchase a sweet and decrease quantity', async () => {
+  // register admin
+  const adminRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Inventory Admin',
+      email: 'inventoryadmin@example.com',
+      password: 'password123'
+    });
+
+  const adminToken = adminRes.body.token;
+
+  const User = require('../models/user.model');
+  await User.findOneAndUpdate(
+    { email: 'inventoryadmin@example.com' },
+    { role: 'ADMIN' }
+  );
+
+  // create sweet
+  const sweetRes = await request(app)
+    .post('/api/sweets')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      name: 'Ladoo',
+      category: 'Indian',
+      price: 5,
+      quantity: 2
+    });
+
+  const sweetId = sweetRes.body._id;
+
+  // register normal user
+  const userRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Buyer',
+      email: 'buyer@example.com',
+      password: 'password123'
+    });
+
+  const userToken = userRes.body.token;
+
+  // purchase sweet
+  const purchaseRes = await request(app)
+    .post(`/api/sweets/${sweetId}/purchase`)
+    .set('Authorization', `Bearer ${userToken}`);
+
+  expect(purchaseRes.statusCode).toBe(200);
+  expect(purchaseRes.body.quantity).toBe(1);
+});
 
 
 });
