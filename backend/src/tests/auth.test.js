@@ -246,5 +246,55 @@ it('should allow user to purchase a sweet and decrease quantity', async () => {
   expect(purchaseRes.body.quantity).toBe(1);
 });
 
+it('should NOT allow purchase when sweet is out of stock', async () => {
+  // register admin
+  const adminRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Stock Admin',
+      email: 'stockadmin@example.com',
+      password: 'password123'
+    });
+
+  const adminToken = adminRes.body.token;
+
+  const User = require('../models/user.model');
+  await User.findOneAndUpdate(
+    { email: 'stockadmin@example.com' },
+    { role: 'ADMIN' }
+  );
+
+  // create sweet with quantity 0
+  const sweetRes = await request(app)
+    .post('/api/sweets')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      name: 'Barfi',
+      category: 'Indian',
+      price: 15,
+      quantity: 0
+    });
+
+  const sweetId = sweetRes.body._id;
+
+  // register user
+  const userRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Buyer Two',
+      email: 'buyer2@example.com',
+      password: 'password123'
+    });
+
+  const userToken = userRes.body.token;
+
+  // attempt purchase
+  const response = await request(app)
+    .post(`/api/sweets/${sweetId}/purchase`)
+    .set('Authorization', `Bearer ${userToken}`);
+
+  expect(response.statusCode).toBe(400);
+});
+
 
 });
