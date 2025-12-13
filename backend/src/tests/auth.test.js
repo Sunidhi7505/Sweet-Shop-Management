@@ -337,5 +337,50 @@ it('should allow ADMIN to restock a sweet', async () => {
   expect(response.body.quantity).toBe(7);
 });
 
+it('should allow ADMIN to update sweet details', async () => {
+  // register admin
+  const adminRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Update Admin',
+      email: 'updateadmin@example.com',
+      password: 'password123'
+    });
+
+  const adminToken = adminRes.body.token;
+
+  const User = require('../models/user.model');
+  await User.findOneAndUpdate(
+    { email: 'updateadmin@example.com' },
+    { role: 'ADMIN' }
+  );
+
+  // create sweet
+  const sweetRes = await request(app)
+    .post('/api/sweets')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      name: 'Peda',
+      category: 'Indian',
+      price: 10,
+      quantity: 20
+    });
+
+  const sweetId = sweetRes.body._id;
+
+  // update sweet
+  const response = await request(app)
+    .put(`/api/sweets/${sweetId}`)
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      name: 'Mathura Peda',
+      price: 15
+    });
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body.name).toBe('Mathura Peda');
+  expect(response.body.price).toBe(15);
+});
+
 
 });
