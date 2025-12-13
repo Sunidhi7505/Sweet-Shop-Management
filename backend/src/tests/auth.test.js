@@ -422,5 +422,65 @@ it('should allow ADMIN to delete a sweet', async () => {
   expect(response.body.message).toBe('Sweet deleted successfully');
 });
 
+it('should allow user to search sweets by name and price range', async () => {
+  // register admin
+  const adminRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Search Admin',
+      email: 'searchadmin@example.com',
+      password: 'password123'
+    });
+
+  const adminToken = adminRes.body.token;
+
+  const User = require('../models/user.model');
+  await User.findOneAndUpdate(
+    { email: 'searchadmin@example.com' },
+    { role: 'ADMIN' }
+  );
+
+  // create sweets
+  await request(app)
+    .post('/api/sweets')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      name: 'Chocolate Barfi',
+      category: 'Indian',
+      price: 20,
+      quantity: 10
+    });
+
+  await request(app)
+    .post('/api/sweets')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      name: 'Milk Cake',
+      category: 'Indian',
+      price: 50,
+      quantity: 5
+    });
+
+  // register user
+  const userRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Search User',
+      email: 'searchuser@example.com',
+      password: 'password123'
+    });
+
+  const userToken = userRes.body.token;
+
+  // search sweets
+  const response = await request(app)
+    .get('/api/sweets/search?name=choco&minPrice=10&maxPrice=30')
+    .set('Authorization', `Bearer ${userToken}`);
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body.length).toBe(1);
+  expect(response.body[0].name).toContain('Chocolate');
+});
+
 
 });

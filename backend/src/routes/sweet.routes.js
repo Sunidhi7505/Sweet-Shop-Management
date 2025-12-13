@@ -3,6 +3,7 @@ const authMiddleware = require('../middlewares/auth.middleware');
 const adminMiddleware = require('../middlewares/admin.middleware');
 const {
   getAllSweets,
+  searchSweets,
   createSweet,
   purchaseSweet,
   restockSweet,
@@ -13,6 +14,8 @@ const {
 const router = express.Router();
 
 router.get('/', authMiddleware, getAllSweets);
+router.get('/search', authMiddleware, searchSweets);
+
 router.post('/', authMiddleware, adminMiddleware, createSweet);
 router.post('/:id/purchase', authMiddleware, purchaseSweet);
 router.post('/:id/restock', authMiddleware, adminMiddleware, restockSweet);

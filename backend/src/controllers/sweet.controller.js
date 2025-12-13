@@ -9,6 +9,34 @@ const getAllSweets = async (req, res) => {
   }
 };
 
+const searchSweets = async (req, res) => {
+  try {
+    const { name, category, minPrice, maxPrice } = req.query;
+
+    const filter = {};
+
+    if (name) {
+      filter.name = { $regex: name, $options: 'i' };
+    }
+
+    if (category) {
+      filter.category = { $regex: category, $options: 'i' };
+    }
+
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
+
+    const sweets = await Sweet.find(filter);
+    res.status(200).json(sweets);
+  } catch (error) {
+    res.status(500).json({ message: 'Search failed' });
+  }
+};
+
+
 const createSweet = async (req, res) => {
   try {
     const { name, category, price, quantity } = req.body;
@@ -100,11 +128,13 @@ const deleteSweet = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Delete failed' });
   }
+
 };
 
 
 module.exports = {
   getAllSweets,
+  searchSweets,
   createSweet,
   purchaseSweet,
   restockSweet,
