@@ -14,6 +14,7 @@ afterAll(async () => {
 });
 
 describe('Auth API', () => {
+
   it('should register a new user', async () => {
     const response = await request(app)
       .post('/api/auth/register')
@@ -28,7 +29,6 @@ describe('Auth API', () => {
   });
 
   it('should login an existing user', async () => {
-    // register first
     await request(app)
       .post('/api/auth/register')
       .send({
@@ -37,7 +37,6 @@ describe('Auth API', () => {
         password: 'password123'
       });
 
-    // login
     const response = await request(app)
       .post('/api/auth/login')
       .send({
@@ -48,4 +47,44 @@ describe('Auth API', () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('token');
   });
+
+  it('should not allow duplicate email registration', async () => {
+    await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: 'User One',
+        email: 'duplicate@example.com',
+        password: 'password123'
+      });
+
+    const response = await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: 'User Two',
+        email: 'duplicate@example.com',
+        password: 'password123'
+      });
+
+    expect(response.statusCode).toBe(400);
+  });
+
+  it('should not login with invalid password', async () => {
+    await request(app)
+      .post('/api/auth/register')
+      .send({
+        name: 'Invalid Login User',
+        email: 'invalidlogin@example.com',
+        password: 'correctpassword'
+      });
+
+    const response = await request(app)
+      .post('/api/auth/login')
+      .send({
+        email: 'invalidlogin@example.com',
+        password: 'wrongpassword'
+      });
+
+    expect(response.statusCode).toBe(401);
+  });
+
 });
