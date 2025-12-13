@@ -169,6 +169,32 @@ it('should allow ADMIN to add a new sweet', async () => {
   expect(response.body.name).toBe('Gulab Jamun');
 });
 
+it('should NOT allow USER to add a new sweet', async () => {
+  // register normal user (USER role by default)
+  const registerRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Normal User',
+      email: 'user@example.com',
+      password: 'password123'
+    });
+
+  const userToken = registerRes.body.token;
+
+  // try to add sweet
+  const response = await request(app)
+    .post('/api/sweets')
+    .set('Authorization', `Bearer ${userToken}`)
+    .send({
+      name: 'Rasgulla',
+      category: 'Indian',
+      price: 12,
+      quantity: 30
+    });
+
+  expect(response.statusCode).toBe(403);
+});
+
 
 
 });
