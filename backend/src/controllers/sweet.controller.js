@@ -47,8 +47,27 @@ const purchaseSweet = async (req, res) => {
   }
 };
 
+const restockSweet = async (req, res) => {
+  try {
+    const { quantity } = req.body;
+
+    const sweet = await Sweet.findById(req.params.id);
+    if (!sweet) {
+      return res.status(404).json({ message: 'Sweet not found' });
+    }
+
+    sweet.quantity += quantity;
+    await sweet.save();
+
+    res.status(200).json(sweet);
+  } catch (error) {
+    res.status(500).json({ message: 'Restock failed' });
+  }
+};
+
 module.exports = {
   getAllSweets,
   createSweet,
-  purchaseSweet
+  purchaseSweet,
+  restockSweet
 };

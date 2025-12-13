@@ -296,5 +296,46 @@ it('should NOT allow purchase when sweet is out of stock', async () => {
   expect(response.statusCode).toBe(400);
 });
 
+it('should allow ADMIN to restock a sweet', async () => {
+  // register admin
+  const adminRes = await request(app)
+    .post('/api/auth/register')
+    .send({
+      name: 'Restock Admin',
+      email: 'restockadmin@example.com',
+      password: 'password123'
+    });
+
+  const adminToken = adminRes.body.token;
+
+  const User = require('../models/user.model');
+  await User.findOneAndUpdate(
+    { email: 'restockadmin@example.com' },
+    { role: 'ADMIN' }
+  );
+
+  // create sweet
+  const sweetRes = await request(app)
+    .post('/api/sweets')
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({
+      name: 'Jalebi',
+      category: 'Indian',
+      price: 8,
+      quantity: 2
+    });
+
+  const sweetId = sweetRes.body._id;
+
+  // restock sweet
+  const response = await request(app)
+    .post(`/api/sweets/${sweetId}/restock`)
+    .set('Authorization', `Bearer ${adminToken}`)
+    .send({ quantity: 5 });
+
+  expect(response.statusCode).toBe(200);
+  expect(response.body.quantity).toBe(7);
+});
+
 
 });
