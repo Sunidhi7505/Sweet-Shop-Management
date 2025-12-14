@@ -201,6 +201,10 @@ POST /api/sweets/:id/restock  (Admin only)
 #### Register Page
 ![WhatsApp Image 2025-12-14 at 17 11 43_82b1f346](https://github.com/user-attachments/assets/297f9689-ce82-46c7-b8f4-9c6430447c84)
 
+#### Responsive Design
+<img width="544" height="817" alt="image" src="https://github.com/user-attachments/assets/f9097119-6435-490c-a21a-f5ca6dd903ca" />
+
+
 ---
 
 ## ⚙️ Setup Instructions
