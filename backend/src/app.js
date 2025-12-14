@@ -5,6 +5,8 @@ const authRoutes = require('./routes/auth.routes');
 const sweetRoutes = require('./routes/sweet.routes');
 const authMiddleware = require('./middlewares/auth.middleware');
 
+
+
 const app = express();
 
 // global middlewares
@@ -14,7 +16,6 @@ app.use(express.json());
 // routes
 app.use('/api/auth', authRoutes);
 app.use('/api/sweets', sweetRoutes);
-
 // protected test route
 app.get('/api/protected', authMiddleware, (req, res) => {
   res.status(200).json({
