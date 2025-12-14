@@ -339,6 +339,8 @@ All final logic, debugging, and refactoring were done manually to ensure full un
 - Screenshots of the application
 - Test report generated using Jest
 - Deployed application link - 
+  - `https://sweet-shop-management-rho-nine.vercel.app/` (frontend on Vercel)
+  - Backend deployed on Render
 
 ---
 
