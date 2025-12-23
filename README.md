@@ -342,6 +342,8 @@ All final logic, debugging, and refactoring were done manually to ensure full un
   - `https://sweet-shop-management-rho-nine.vercel.app/` (frontend on Vercel)
   - Backend deployed on Render
 
+- For testing Admin features, add these credentials while Login - Email : `admin@gmail.com` and Password : `admin1234`
+
 ---
 
 ## 👨‍💻 Author
