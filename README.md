@@ -1,4 +1,4 @@
-# TDD Kata: Sweet Shop Management System
+# Sweet Shop Management System
 
 **Project Type:**  
 Full Stack Web Application (MERN Stack)
@@ -7,8 +7,7 @@ Full Stack Web Application (MERN Stack)
 
 ## 📌 Project Overview
 
-This project is a full-stack **Sweet Shop Management System** built as part of a  
-**Test-Driven Development (TDD) Kata**.
+This project is a full-stack **Sweet Shop Management System**.
 
 The system allows users to browse and purchase sweets, while administrators can
 manage inventory, update sweets, and track revenue analytics.
@@ -18,8 +17,6 @@ The application demonstrates:
 - Secure authentication and authorization
 - Database-driven inventory management
 - Modern frontend SPA development
-- Test-Driven Development practices
-- Responsible and transparent AI usage
 
 ---
 
@@ -32,8 +29,6 @@ The application demonstrates:
 - Mongoose
 - JSON Web Tokens (JWT)
 - bcrypt
-- Jest
-- Supertest
 
 ### Frontend
 - React (Vite)
@@ -264,31 +259,6 @@ JWT_SECRET=your_jwt_secret
 ### Admin Role Setup (Local):
 - Update user role in MongoDB to ADMIN
 
---- 
-
-## 🧪 Test-Driven Development (TDD)
-
-This project follows **Test-Driven Development (TDD)** principles, with a strong focus on backend logic.
-
-### Testing Tools
-- **Jest**
-- **Supertest**
-
-### Test Coverage Includes
-- User registration and login
-- JWT authentication
-- Protected routes
-- Admin-only authorization
-- Sweet CRUD operations
-- Purchase logic
-- Restock logic
-- Error handling scenarios
-
-### TDD Cycle
-```text
-Red → Green → Refactor
-```
-
 ---
 
 ## 🧾 Git & Version Control
@@ -296,39 +266,6 @@ Red → Green → Refactor
 - Git used for version control
 - Small, meaningful commits
 - Clear and descriptive commit messages
-- Commit history reflects the TDD workflow
-
----
-
-## 🤖 My AI Usage
-
-### AI Tools Used
-- **ChatGPT Go** 
-- **GitHub Copilot**
-- **Perplexity Pro**
-- **Cursor**
-
-### How AI Was Used
-- Brainstorming system architecture
-- Designing REST API structure
-- Generating boilerplate code for controllers and models
-- Assisting with test case ideas using Jest and Supertest
-- Debugging edge cases (e.g., out-of-stock scenarios)
-- Improving UI/UX ideas
-- Refining README documentation
-
-### AI Co-authorship Policy
-
-For every commit where AI assistance was used, the following co-author trailer was added to the commit message:
-
-```text
-Co-authored-by: AI Assistant <AI@users.noreply.github.com>
-```
-
-### Reflection
-
-AI accelerated development by reducing boilerplate effort and helping explore alternative solutions.  
-All final logic, debugging, and refactoring were done manually to ensure full understanding and originality.
 
 ---
 
@@ -337,7 +274,6 @@ All final logic, debugging, and refactoring were done manually to ensure full un
 - Public Git repository
 - Complete `README.md`
 - Screenshots of the application
-- Test report generated using Jest
 - Deployed application link - 
   - `https://sweet-shop-management-rho-nine.vercel.app/` (frontend on Vercel)
   - Backend deployed on Render
